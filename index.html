@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PulseStage — Book Live Concerts</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+<style>
+:root{
+  --bg:#0B0812;            /* stage-dark */
+  --panel:#151021;
+  --panel2:#1D1630;
+  --ink:#F2EFFA;
+  --muted:#9C93B8;
+  --neon:#C33BFF;          /* electric violet */
+  --magenta:#FF3B8D;       /* stage magenta */
+  --cyan:#3BE8FF;          /* laser cyan */
+  --gold:#FFC53B;
+  --grad:linear-gradient(120deg,#FF3B8D,#C33BFF 55%,#3BE8FF);
+  --radius:18px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);
+  line-height:1.55;-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;line-height:1.15;margin:0}
+a{color:inherit;text-decoration:none}
+.container{max-width:1140px;margin:0 auto;padding:0 20px}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:2px;border-radius:8px}
+
+/* Header */
+header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(11,8,18,.8);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(195,59,255,.15);
+}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
+.brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;display:flex;align-items:center;gap:10px}
+.brand .pulse{
+  width:36px;height:36px;border-radius:10px;display:grid;place-items:center;
+  background:var(--grad);color:#fff;font-size:16px;
+  box-shadow:0 0 24px rgba(195,59,255,.5);
+}
+nav ul{display:flex;gap:4px;list-style:none;margin:0;padding:0}
+nav a{padding:8px 16px;border-radius:999px;font-weight:500;font-size:15px;color:var(--muted);transition:.15s}
+nav a:hover,nav a.active{color:var(--ink);background:rgba(195,59,255,.12)}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;
+  padding:12px 24px;border-radius:999px;font-weight:600;font-family:Inter,sans-serif;font-size:15px;
+  transition:transform .12s,box-shadow .12s;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn-neon{background:var(--grad);color:#fff;box-shadow:0 0 28px rgba(255,59,141,.4)}
+.btn-line{background:transparent;color:var(--ink);border:1.5px solid rgba(242,239,250,.25)}
+.btn-line:hover{border-color:var(--cyan);color:var(--cyan)}
+
+/* Hero */
+.hero{
+  position:relative;overflow:hidden;padding:90px 0 110px;text-align:center;
+  background:
+    radial-gradient(ellipse 60% 45% at 50% -5%,rgba(195,59,255,.35),transparent),
+    radial-gradient(ellipse 35% 30% at 12% 60%,rgba(255,59,141,.22),transparent),
+    radial-gradient(ellipse 35% 30% at 88% 55%,rgba(59,232,255,.16),transparent);
+}
+.hero .tag{
+  display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:999px;
+  border:1px solid rgba(195,59,255,.4);background:rgba(195,59,255,.1);
+  font-size:13px;font-weight:600;color:#D9A8FF;margin-bottom:22px;
+}
+.hero h1{font-size:56px;font-weight:700;letter-spacing:-.02em;margin-bottom:16px}
+.hero h1 .glow{
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 18px rgba(255,59,141,.45));
+}
+.hero p{color:var(--muted);max-width:560px;margin:0 auto 30px;font-size:17px}
+
+/* Filters */
+.filters{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 0 36px}
+.chip{
+  padding:9px 20px;border-radius:999px;cursor:pointer;font-weight:600;font-size:14px;
+  background:var(--panel);color:var(--muted);border:1px solid rgba(242,239,250,.1);transition:.15s;
+}
+.chip:hover{color:var(--ink);border-color:rgba(195,59,255,.5)}
+.chip.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 0 18px rgba(195,59,255,.35)}
+
+/* Section */
+.section{padding:56px 0}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:26px}
+.sec-head h2{font-size:30px}
+.sec-head .muted{color:var(--muted);font-size:14px}
+
+/* Concert cards */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.card{
+  background:var(--panel);border-radius:var(--radius);overflow:hidden;
+  border:1px solid rgba(242,239,250,.07);display:flex;flex-direction:column;
+  transition:transform .18s,border-color .18s,box-shadow .18s;
+}
+.card:hover{transform:translateY(-6px);border-color:rgba(195,59,255,.45);box-shadow:0 18px 44px rgba(195,59,255,.18)}
+.card .art{position:relative;height:170px;background-size:cover;background-position:center}
+.card .art::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(11,8,18,.9))}
+.card .date-badge{
+  position:absolute;top:14px;left:14px;z-index:2;text-align:center;
+  background:rgba(11,8,18,.85);backdrop-filter:blur(6px);border:1px solid rgba(255,197,59,.4);
+  border-radius:12px;padding:8px 12px;line-height:1.1;
+}
+.date-badge .d{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;color:var(--gold)}
+.date-badge .m{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.06em}
+.card .genre{
+  position:absolute;bottom:12px;left:14px;z-index:2;font-size:12px;font-weight:600;
+  padding:4px 12px;border-radius:999px;background:rgba(59,232,255,.15);color:var(--cyan);
+  border:1px solid rgba(59,232,255,.35);
+}
+.card-body{padding:18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.card-body h3{font-size:19px}
+.card-body .venue{color:var(--muted);font-size:14px;display:flex;align-items:center;gap:7px}
+.card-foot{display:flex;align-items:center;justify-content:space-between;padding:0 18px 18px;margin-top:auto}
+.price-from{font-size:13px;color:var(--muted)}
+.price-from b{display:block;font-size:19px;color:var(--ink);font-family:'Space Grotesk',sans-serif}
+.book-btn{
+  background:rgba(195,59,255,.14);color:#D9A8FF;border:1px solid rgba(195,59,255,.4);
+  padding:10px 20px;border-radius:999px;font-weight:600;cursor:pointer;font-size:14px;transition:.15s;
+}
+.book-btn:hover{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 0 20px rgba(255,59,141,.4)}
+.sold{opacity:.45;pointer-events:none}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 0}
+
+/* Booking panel (ticket look) */
+.booking{
+  display:none;margin-top:34px;border-radius:22px;overflow:hidden;
+  background:var(--panel2);border:1px solid rgba(195,59,255,.35);
+  box-shadow:0 24px 60px rgba(195,59,255,.15);
+}
+.booking.open{display:grid;grid-template-columns:1.2fr .8fr}
+.b-left{padding:30px}
+.b-left h3{font-size:24px;margin-bottom:4px}
+.b-left .venue{color:var(--muted);font-size:14px;margin-bottom:22px}
+.tier{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px 16px;border-radius:14px;border:1.5px solid rgba(242,239,250,.12);
+  margin-bottom:12px;cursor:pointer;transition:.15s;background:rgba(11,8,18,.35);
+}
+.tier:hover{border-color:rgba(59,232,255,.5)}
+.tier.sel{border-color:var(--cyan);background:rgba(59,232,255,.08);box-shadow:0 0 16px rgba(59,232,255,.15)}
+.tier .t-name{font-weight:600}
+.tier .t-perk{font-size:12.5px;color:var(--muted)}
+.tier .t-price{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;color:var(--gold)}
+.qty{display:flex;align-items:center;gap:14px;margin:20px 0 6px}
+.qty button{
+  width:38px;height:38px;border-radius:50%;border:1.5px solid rgba(242,239,250,.25);
+  background:transparent;color:var(--ink);font-size:17px;cursor:pointer;transition:.15s;
+}
+.qty button:hover{border-color:var(--magenta);color:var(--magenta)}
+.qty .n{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;min-width:28px;text-align:center}
+/* Stub side with perforation */
+.b-right{
+  position:relative;padding:30px;background:rgba(11,8,18,.5);
+  border-left:2px dashed rgba(242,239,250,.2);
+  display:flex;flex-direction:column;
+}
+.b-right::before,.b-right::after{
+  content:'';position:absolute;left:-13px;width:24px;height:24px;border-radius:50%;background:var(--bg);
+}
+.b-right::before{top:-12px}
+.b-right::after{bottom:-12px}
+.sum-row{display:flex;justify-content:space-between;font-size:14.5px;color:var(--muted);margin-bottom:10px}
+.sum-row.total{
+  margin-top:auto;padding-top:16px;border-top:1px solid rgba(242,239,250,.12);
+  color:var(--ink);font-weight:700;font-size:18px;
+}
+.sum-row.total span:last-child{font-family:'Space Grotesk',sans-serif;color:var(--gold);font-size:22px}
+#confirmMsg{margin-top:12px;font-size:14px;font-weight:600;color:var(--cyan);display:none}
+
+/* Footer */
+footer{padding:40px 0;border-top:1px solid rgba(195,59,255,.15);color:var(--muted);font-size:14px;text-align:center;margin-top:40px}
+footer b{color:var(--ink)}
+
+@media(max-width:900px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .hero h1{font-size:38px}
+  nav{display:none}
+  .booking.open{grid-template-columns:1fr}
+  .b-right{border-left:0;border-top:2px dashed rgba(242,239,250,.2)}
+  .b-right::before{top:-12px;left:auto;right:-12px}
+  .b-right::after{display:none}
+}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.hero{padding:60px 0 70px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container header-inner">
+    <a class="brand" href="#"><span class="pulse"><em class="fas fa-bolt"></em></span>Pulse<span style="color:var(--neon)">Stage</span></a>
+    <nav aria-label="Primary">
+      <ul>
+        <li><a href="#" class="active">Concerts</a></li>
+        <li><a href="#">Festivals</a></li>
+        <li><a href="#">Venues</a></li>
+        <li><a href="#">My tickets</a></li>
+      </ul>
+    </nav>
+    <button class="btn btn-line"><em class="far fa-user"></em> Sign in</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <span class="tag"><em class="fas fa-fire"></em> 40+ shows on sale this week</span>
+      <h1>Feel the music.<br><span class="glow">Live. Loud. Yours.</span></h1>
+      <p>Front-row energy, secure checkout, instant e-tickets. Find your next unforgettable night.</p>
+      <button class="btn btn-neon" onclick="document.getElementById('shows').scrollIntoView({behavior:'smooth'})">
+        Browse concerts <em class="fas fa-arrow-down"></em>
+      </button>
+    </div>
+  </section>
+
+  <section id="shows" class="section container" aria-labelledby="shows-title">
+    <div class="sec-head">
+      <h2 id="shows-title">Upcoming concerts</h2>
+      <span class="muted" id="countLabel"></span>
+    </div>
+
+    <div class="filters" id="filters" role="group" aria-label="Filter by genre"></div>
+    <div class="grid" id="showGrid" aria-live="polite"></div>
+
+    <!-- Booking panel styled as a ticket -->
+    <div class="booking" id="booking" aria-live="polite">
+      <div class="b-left">
+        <h3 id="bTitle"></h3>
+        <div class="venue" id="bVenue"></div>
+        <div id="tierList"></div>
+        <div class="qty">
+          <span style="color:var(--muted);font-size:14px">Tickets</span>
+          <button id="qMinus" aria-label="Fewer tickets">−</button>
+          <span class="n" id="qNum">1</span>
+          <button id="qPlus" aria-label="More tickets">+</button>
+        </div>
+      </div>
+      <div class="b-right">
+        <div class="sum-row"><span>Tier</span><span id="sTier">—</span></div>
+        <div class="sum-row"><span>Qty</span><span id="sQty">1</span></div>
+        <div class="sum-row"><span>Booking fee</span><span>$4.50</span></div>
+        <div class="sum-row total"><span>Total</span><span id="sTotal">$0</span></div>
+        <button class="btn btn-neon" id="payBtn" style="margin-top:16px;justify-content:center">Book tickets</button>
+        <div id="confirmMsg"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container"><b>PulseStage</b> · Live concert ticketing demo · © <span id="year"></span></div>
+</footer>
+
+<script>
+const SHOWS=[
+ {id:1,artist:'Neon Skyline',venue:'Arena One, Hyderabad',day:'14',mon:'OCT',genre:'EDM',from:49,
+  img:'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=800&q=80',
+  tiers:[{n:'General',p:49,perk:'Standing floor access'},{n:'Gold',p:89,perk:'Front zone + merch coupon'},{n:'VIP Lounge',p:159,perk:'Balcony seats, lounge & bar'}]},
+ {id:2,artist:'Midnight Mirage',venue:'Riverside Amphitheatre',day:'21',mon:'OCT',genre:'Rock',from:39,
+  img:'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=800&q=80',
+  tiers:[{n:'Lawn',p:39,perk:'Open lawn seating'},{n:'Reserved',p:69,perk:'Reserved chair block'},{n:'Pit',p:129,perk:'Standing pit at the stage'}]},
+ {id:3,artist:'Aaravi Live',venue:'Grand Stage, Vizag',day:'02',mon:'NOV',genre:'Indie',from:29,
+  img:'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80',
+  tiers:[{n:'Silver',p:29,perk:'Rear seating'},{n:'Gold',p:59,perk:'Centre seating'},{n:'Platinum',p:99,perk:'First 5 rows + meet & greet draw'}]},
+ {id:4,artist:'Bassline Collective',venue:'Warehouse 9',day:'08',mon:'NOV',genre:'EDM',from:35,
+  img:'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80',
+  tiers:[{n:'Early Bird',p:35,perk:'Entry after 8 PM'},{n:'Regular',p:55,perk:'All-night access'},{n:'Backstage',p:149,perk:'Backstage tour + drinks'}]},
+ {id:5,artist:'Strings of Dawn',venue:'Heritage Hall',day:'16',mon:'NOV',genre:'Classical',from:25,
+  img:'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?auto=format&fit=crop&w=800&q=80',
+  tiers:[{n:'Balcony',p:25,perk:'Upper balcony'},{n:'Stalls',p:45,perk:'Ground floor stalls'},{n:'Box',p:110,perk:'Private box for premium view'}]},
+ {id:6,artist:'Crimson Echo',venue:'Metro Dome',day:'23',mon:'NOV',genre:'Rock',from:45,sold:true,
+  img:'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?auto=format&fit=crop&w=800&q=80',
+  tiers:[]}
+];
+const GENRES=['All','EDM','Rock','Indie','Classical'];
+
+const grid=document.getElementById('showGrid'),filters=document.getElementById('filters'),
+booking=document.getElementById('booking'),countLabel=document.getElementById('countLabel');
+let activeGenre='All',current=null,tierIdx=0,qty=1;
+const FEE=4.5;
+
+function renderFilters(){
+  filters.innerHTML='';
+  GENRES.forEach(g=>{
+    const b=document.createElement('button');
+    b.className='chip'+(g===activeGenre?' on':'');
+    b.textContent=g;
+    b.onclick=()=>{activeGenre=g;closeBooking();renderFilters();renderShows();};
+    filters.appendChild(b);
+  });
+}
+
+function renderShows(){
+  const list=SHOWS.filter(s=>activeGenre==='All'||s.genre===activeGenre);
+  countLabel.textContent=list.length+' show'+(list.length!==1?'s':'');
+  grid.innerHTML='';
+  if(!list.length){grid.innerHTML='<p class="empty">No shows in this genre yet — check back soon.</p>';return;}
+  list.forEach(s=>{
+    const c=document.createElement('article');
+    c.className='card'+(s.sold?' sold':'');
+    c.innerHTML=`
+      <div class="art" style="background-image:url('${s.img}')">
+        <div class="date-badge"><div class="d">${s.day}</div><div class="m">${s.mon}</div></div>
+        <span class="genre">${s.genre}</span>
+      </div>
+      <div class="card-body">
+        <h3>${s.artist}</h3>
+        <div class="venue"><em class="fas fa-location-dot"></em> ${s.venue}</div>
+      </div>
+      <div class="card-foot">
+        <div class="price-from">From <b>$${s.from}</b></div>
+        <button class="book-btn">${s.sold?'Sold out':'Book now'}</button>
+      </div>`;
+    if(!s.sold)c.querySelector('.book-btn').onclick=()=>openBooking(s);
+    grid.appendChild(c);
+  });
+}
+
+function openBooking(s){
+  current=s;tierIdx=0;qty=1;
+  document.getElementById('bTitle').textContent=s.artist;
+  document.getElementById('bVenue').innerHTML=`<em class="fas fa-location-dot"></em> ${s.venue} · ${s.day} ${s.mon}`;
+  renderTiers();updateSummary();
+  document.getElementById('confirmMsg').style.display='none';
+  booking.classList.add('open');
+  booking.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function closeBooking(){booking.classList.remove('open');current=null;}
+
+function renderTiers(){
+  const wrap=document.getElementById('tierList');wrap.innerHTML='';
+  current.tiers.forEach((t,i)=>{
+    const d=document.createElement('div');
+    d.className='tier'+(i===tierIdx?' sel':'');
+    d.setAttribute('role','button');d.setAttribute('tabindex','0');
+    d.innerHTML=`<div><div class="t-name">${t.n}</div><div class="t-perk">${t.perk}</div></div><div class="t-price">$${t.p}</div>`;
+    const pick=()=>{tierIdx=i;renderTiers();updateSummary();};
+    d.onclick=pick;
+    d.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick();}};
+    wrap.appendChild(d);
+  });
+}
+
+function updateSummary(){
+  const t=current.tiers[tierIdx];
+  document.getElementById('sTier').textContent=t.n;
+  document.getElementById('sQty').textContent=qty;
+  document.getElementById('qNum').textContent=qty;
+  document.getElementById('sTotal').textContent='$'+(t.p*qty+FEE).toFixed(2);
+}
+
+document.getElementById('qMinus').onclick=()=>{if(qty>1){qty--;updateSummary();}};
+document.getElementById('qPlus').onclick=()=>{if(qty<8){qty++;updateSummary();}};
+document.getElementById('payBtn').onclick=()=>{
+  const m=document.getElementById('confirmMsg');
+  m.style.display='block';
+  m.innerHTML=`<em class="fas fa-circle-check"></em> Booked! ${qty} × ${current.tiers[tierIdx].n} for ${current.artist}. E-tickets sent to your email (demo).`;
+};
+
+renderFilters();renderShows();
+document.getElementById('year').textContent=new Date().getFullYear();
+</script>
+</body>
+</html>
